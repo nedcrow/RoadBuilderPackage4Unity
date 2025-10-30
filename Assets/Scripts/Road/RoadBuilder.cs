@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 /// <summary>
 /// Click-Click Road Builder with snapping:
@@ -71,6 +74,14 @@ public class RoadBuilder : MonoBehaviour
     private Transform _roadsParent;
     private Transform _pooledRoadsParent;
     private Transform _pooledChunksParent;
+
+#if ENABLE_INPUT_SYSTEM
+    // New Input System
+    private PlayerInput _playerInput;
+    private bool _useNewInputSystem;
+    private bool _isStraightModifierPressed;
+    private bool _isCurveModifierPressed;
+#endif
 
     // Pooling
     private readonly Queue<GameObject> _roadPool = new();
@@ -181,9 +192,32 @@ public class RoadBuilder : MonoBehaviour
         _pooledChunksParent = new GameObject("PooledChunks").transform;
         _pooledChunksParent.SetParent(transform, false);
 
+#if ENABLE_INPUT_SYSTEM
+        // New Input System 초기화 시도
+        TryInitializeNewInputSystem();
+#endif
+
         // 프리뷰용 단일 메시 생성
         CreatePreviewMesh();
     }
+
+#if ENABLE_INPUT_SYSTEM
+    private void TryInitializeNewInputSystem()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+
+        if (_playerInput != null && _playerInput.actions != null)
+        {
+            _useNewInputSystem = true;
+            Debug.Log("[RoadBuilder] New Input System 활성화됨 (PlayerInput 감지)");
+        }
+        else
+        {
+            _useNewInputSystem = false;
+            Debug.Log("[RoadBuilder] Old Input System 사용 (PlayerInput 없음)");
+        }
+    }
+#endif
 
     private void CreatePreviewMesh()
     {
@@ -228,34 +262,170 @@ public class RoadBuilder : MonoBehaviour
         if (!_cam) _cam = Camera.main;
 
         HandleAltCurveAdjustment();
-        HandleInput();
+
+#if ENABLE_INPUT_SYSTEM
+        // New Input System 사용 중이 아닐 때만 Old Input 처리
+        if (!_useNewInputSystem)
+#endif
+        {
+            HandleOldInput();
+        }
+
+        // 프리뷰는 항상 업데이트
+        HandlePreview();
     }
 
-    private void HandleInput()
+    // Old Input System 처리
+    private void HandleOldInput()
     {
         if (!BuildModeEnabled) return;
 
         HandleAltKeyForCurves();
-        HandleLeftClick();
-        HandlePreview();
-        HandleRightClick();
-        HandleEscape();
+
+        // 좌클릭
+        if (Input.GetMouseButtonDown(0))
+        {
+            DoClick();
+        }
+
+        // 우클릭
+        if (Input.GetMouseButtonDown(1))
+        {
+            DoRightClick();
+        }
+
+        // ESC
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            DoCancel();
+        }
     }
 
-    private void HandleLeftClick()
-    {
-        if (!Input.GetMouseButtonDown(0)) return;
+#if ENABLE_INPUT_SYSTEM
+    // ========================================
+    // New Input System Public 메서드들
+    // PlayerInput Events에 연결하세요
+    // ========================================
 
+    /// <summary>
+    /// [PlayerInput Events] LeftClick 액션에 연결
+    /// 좌클릭: Preview 시작 또는 도로 건설
+    /// </summary>
+    public void OnLeftClick(InputAction.CallbackContext context)
+    {
+        if (!BuildModeEnabled) return;
+        if (context.performed)
+        {
+            DoClick();
+        }
+    }
+
+    /// <summary>
+    /// [PlayerInput Events] RightClick 액션에 연결
+    /// 우클릭: Preview 취소 또는 청크 삭제
+    /// </summary>
+    public void OnRightClick(InputAction.CallbackContext context)
+    {
+        if (!BuildModeEnabled) return;
+        if (context.performed)
+        {
+            DoRightClick();
+        }
+    }
+
+    /// <summary>
+    /// [PlayerInput Events] Cancel 액션에 연결
+    /// ESC: Preview 취소
+    /// </summary>
+    public void OnCancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            DoCancel();
+        }
+    }
+
+    /// <summary>
+    /// [PlayerInput Events] StraightModifier 액션에 연결
+    /// Shift 키: 직선 모드
+    /// </summary>
+    public void OnStraightModifier(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            _isStraightModifierPressed = true;
+        }
+        else if (context.canceled)
+        {
+            _isStraightModifierPressed = false;
+        }
+    }
+
+    /// <summary>
+    /// [PlayerInput Events] PressedCurveModifier 액션에 연결
+    /// Alt 키 눌림: 곡선 모드 활성화 + 베지어 참고점 저장
+    /// </summary>
+    public void OnPressedCurveModifier(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _isCurveModifierPressed = true;
+
+            // Alt 키가 처음 눌린 순간에 현재 커서 위치를 베지어 참고점으로 저장
+            if (!_wasAltPressed && _isPreviewing)
+            {
+                if (RayToGround(out var currentMousePos))
+                {
+                    _bezierReferencePoint = currentMousePos;
+                }
+            }
+            _wasAltPressed = true;
+        }
+    }
+
+    /// <summary>
+    /// [PlayerInput Events] ReleasedCurveModifier 액션에 연결
+    /// Alt 키 뗌: 곡선 모드 비활성화
+    /// </summary>
+    public void OnReleasedCurveModifier(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _isCurveModifierPressed = false;
+            _wasAltPressed = false;
+        }
+    }
+#endif
+
+    // ========================================
+    // 공통 입력 처리 로직
+    // ========================================
+
+    private void DoClick()
+    {        
         if (!_isPreviewing)
             StartPreview();
         else
             BuildRoad();
     }
 
+    private void DoRightClick()
+    {
+        if (_isPreviewing)
+            StopPreview();
+        else
+            TryDeleteChunkUnderMouse();
+    }
+
+    private void DoCancel()
+    {
+        if (_isPreviewing)
+            StopPreview();
+    }
+
     private void StartPreview()
     {
         if (!RayToGround(out var hitPos)) return;
-
         SetStartAnchor(hitPos);
         _isPreviewing = true;
         _bezierReferencePoint = Vector3.zero; // Reset bezier reference point for new preview
@@ -291,22 +461,6 @@ public class RoadBuilder : MonoBehaviour
         UpdatePreviewMesh(centerline);
     }
 
-    private void HandleRightClick()
-    {
-        if (!Input.GetMouseButtonDown(1)) return;
-
-        if (_isPreviewing)
-            StopPreview();
-        else
-            TryDeleteChunkUnderMouse();
-    }
-
-    private void HandleEscape()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) && _isPreviewing)
-            StopPreview();
-    }
-
     private void SetStartAnchor(Vector3 position)
     {
         _startSnapped = TryFindSnap(position, out var sPoint, out var sTan, out var sIsEnd);
@@ -338,9 +492,22 @@ public class RoadBuilder : MonoBehaviour
 
     private void HandleAltCurveAdjustment()
     {
-        if (!IsAltPressed()) return;
+        if (!IsAltCurveMode()) return;
 
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        float scroll = 0f;
+
+#if ENABLE_INPUT_SYSTEM
+        if (_useNewInputSystem && Mouse.current != null)
+        {
+            Vector2 scrollValue = Mouse.current.scroll.ReadValue();
+            scroll = scrollValue.y / 120f; // 마우스 휠 값 정규화
+        }
+        else
+#endif
+        {
+            scroll = Input.GetAxis("Mouse ScrollWheel");
+        }
+
         if (Mathf.Abs(scroll) > SCROLL_THRESHOLD)
         {
             float change = scroll * WHEEL_SENSITIVITY;
@@ -348,15 +515,25 @@ public class RoadBuilder : MonoBehaviour
         }
     }
 
-    private bool IsAltPressed() => Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
-
     private bool IsStraightMode()
     {
+#if ENABLE_INPUT_SYSTEM
+        if (_useNewInputSystem)
+        {
+            return _isStraightModifierPressed;
+        }
+#endif
         return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
     }
 
     private bool IsAltCurveMode()
     {
+#if ENABLE_INPUT_SYSTEM
+        if (_useNewInputSystem)
+        {
+            return _isCurveModifierPressed;
+        }
+#endif
         return Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
     }
 
@@ -378,7 +555,16 @@ public class RoadBuilder : MonoBehaviour
 
     private bool RayToGround(out Vector3 pos)
     {
-        var ray = _cam ? _cam.ScreenPointToRay(Input.mousePosition) : new Ray();
+        if (!_cam)
+        {
+            pos = default;
+            Debug.LogError("[RayToGround] Null exception: Camera for raycasting.");
+            return false;
+        }
+
+        Vector3 mousePosition = GetMousePosition();
+        var ray = _cam.ScreenPointToRay(mousePosition);
+
         if (Physics.Raycast(ray, out var hit, rayMaxDistance, groundMask, QueryTriggerInteraction.Ignore))
         {
             pos = hit.point;
@@ -386,6 +572,17 @@ public class RoadBuilder : MonoBehaviour
         }
         pos = default;
         return false;
+    }
+
+    private Vector3 GetMousePosition()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (_useNewInputSystem && Mouse.current != null)
+        {
+            return Mouse.current.position.ReadValue();
+        }
+#endif
+        return Input.mousePosition;
     }
     #endregion
 
@@ -842,7 +1039,8 @@ public class RoadBuilder : MonoBehaviour
     {
         if (!_cam) return;
 
-        var ray = _cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 mousePosition = GetMousePosition();
+        var ray = _cam.ScreenPointToRay(mousePosition);
         if (!Physics.Raycast(ray, out var hit, rayMaxDistance, ~0, QueryTriggerInteraction.Collide)) return;
 
         var go = hit.collider ? hit.collider.gameObject : null;
@@ -857,12 +1055,6 @@ public class RoadBuilder : MonoBehaviour
                 var road = go.GetComponentInParent<RoadComponent>();
                 if (road)
                 {
-
-                    // TODO(human): 도로의 모든 청크가 삭제되었는지 확인하고,
-                    // 모든 청크가 삭제되었다면 road.NotifyDeletion() 호출하여
-                    // 인접 도로들과의 관계를 정리해주세요
-
-                    // 도로 삭제 시 인접 도로들의 Cap 업데이트
                     road.UpdateCaps();
                 }
                 Destroy(go);
