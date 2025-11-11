@@ -3,6 +3,8 @@ using UnityEngine;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+#elif !ENABLE_LEGACY_INPUT_MANAGER
+#warning "Neither ENABLE_INPUT_SYSTEM nor ENABLE_LEGACY_INPUT_MANAGER is defined. Old Input will be used by default."
 #endif
 
 /// <summary>
@@ -268,13 +270,16 @@ public class RoadBuilder : MonoBehaviour
         if (!_useNewInputSystem)
 #endif
         {
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
             HandleOldInput();
+#endif
         }
 
         // 프리뷰는 항상 업데이트
         HandlePreview();
     }
 
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
     // Old Input System 처리
     private void HandleOldInput()
     {
@@ -300,6 +305,7 @@ public class RoadBuilder : MonoBehaviour
             DoCancel();
         }
     }
+#endif
 
 #if ENABLE_INPUT_SYSTEM
     // ========================================
@@ -426,6 +432,7 @@ public class RoadBuilder : MonoBehaviour
     private void StartPreview()
     {
         if (!RayToGround(out var hitPos)) return;
+        Debug.Log(hitPos);
         SetStartAnchor(hitPos);
         _isPreviewing = true;
         _bezierReferencePoint = Vector3.zero; // Reset bezier reference point for new preview
@@ -503,10 +510,14 @@ public class RoadBuilder : MonoBehaviour
             scroll = scrollValue.y / 120f; // 마우스 휠 값 정규화
         }
         else
-#endif
         {
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
             scroll = Input.GetAxis("Mouse ScrollWheel");
+#endif
         }
+#elif ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
+        scroll = Input.GetAxis("Mouse ScrollWheel");
+#endif
 
         if (Mathf.Abs(scroll) > SCROLL_THRESHOLD)
         {
@@ -523,7 +534,11 @@ public class RoadBuilder : MonoBehaviour
             return _isStraightModifierPressed;
         }
 #endif
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
         return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+#else
+        return false;
+#endif
     }
 
     private bool IsAltCurveMode()
@@ -534,9 +549,14 @@ public class RoadBuilder : MonoBehaviour
             return _isCurveModifierPressed;
         }
 #endif
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
         return Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+#else
+        return false;
+#endif
     }
 
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
     private void HandleAltKeyForCurves()
     {
         bool altCurrentlyPressed = IsAltCurveMode();
@@ -552,6 +572,7 @@ public class RoadBuilder : MonoBehaviour
 
         _wasAltPressed = altCurrentlyPressed;
     }
+#endif
 
     private bool RayToGround(out Vector3 pos)
     {
@@ -568,6 +589,7 @@ public class RoadBuilder : MonoBehaviour
         if (Physics.Raycast(ray, out var hit, rayMaxDistance, groundMask, QueryTriggerInteraction.Ignore))
         {
             pos = hit.point;
+            Debug.Log($"hit.point: {hit.point}");
             return true;
         }
         pos = default;
@@ -582,7 +604,11 @@ public class RoadBuilder : MonoBehaviour
             return Mouse.current.position.ReadValue();
         }
 #endif
+#if ENABLE_LEGACY_INPUT_MANAGER || !ENABLE_INPUT_SYSTEM
         return Input.mousePosition;
+#else
+        return Vector3.zero;
+#endif
     }
     #endregion
 
