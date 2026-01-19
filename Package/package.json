@@ -1,0 +1,24 @@
+{
+  "name": "com.yourcompany.roadbuilder",
+  "version": "1.0.0",
+  "displayName": "Road Builder",
+  "description": "Unity에서 도로를 만들 수 있는 클릭 기반 시스템",
+  "unity": "2021.3",
+  "keywords": [
+    "road",
+    "builder",
+    "tool"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "dependencies": {},
+  "samples": [
+    {
+      "displayName": "Road Builder Sample",
+      "description": "도로 생성 시스템 사용 예제",
+      "path": "Samples~"
+    }
+  ]
+}
