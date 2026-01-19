@@ -1,4 +1,4 @@
-# RoadSystem
+# RoadBuilderPackage4Unity
 
 Unity에서 도로를 만들 수 있는 클릭 기반 시스템입니다.
 
@@ -12,18 +12,51 @@ Unity에서 도로를 만들 수 있는 클릭 기반 시스템입니다.
 - **청크 삭제**: 우클릭으로 특정 도로 청크 삭제
 - **미리보기**: 투명한 노란색/주황색으로 실시간 미리보기
 
-## 폴더 구조
+## 저장소 구조
 
 ```
-RoadSystem/
-├── Scripts/
-│   ├── Road/
-│   │   ├── RoadBuilder.cs          # 도로 생성 시스템 로직
-│   │   └── RoadComponent.cs        # 개별 도로 컴포넌트 데이터
-│   └── RoadActionsClass.cs         # Input System Actions (자동 생성)
-├── Settings/
-│   └── RoadActions.inputactions    # Input Actions Asset
-└── README.md
+RoadBuilderPackage4Unity/
+├── Dev/                    # 개발 및 테스트용 Unity 프로젝트
+│   └── Assets/
+│       ├── Scripts/
+│       │   ├── Road/
+│       │   │   ├── RoadBuilder.cs
+│       │   │   └── RoadComponent.cs
+│       │   └── RoadActionsClass.cs
+│       ├── Materials/
+│       ├── Scenes/
+│       └── RoadActions.inputactions
+│
+├── Package/                # Unity 패키지 (자동 동기화됨)
+│   ├── package.json
+│   ├── README.md
+│   ├── Runtime/           # 런타임 스크립트
+│   └── Samples~/          # 샘플 파일
+│
+├── Sample/                 # 샘플 소스 (예약됨)
+└── .git/hooks/pre-commit  # 자동 동기화 훅
+```
+
+## 패키지 설치 방법
+
+### Unity Package Manager로 설치
+
+1. Unity에서 **Window > Package Manager** 열기
+2. **+** 버튼 클릭 → **Add package from git URL** 선택
+3. 다음 URL 입력:
+   ```
+   https://github.com/[YOUR_USERNAME]/RoadBuilderPackage4Unity.git?path=/Package
+   ```
+
+### 샘플 임포트
+
+1. Package Manager에서 **RoadBuilderPackage4Unity** 선택
+2. **Samples** 탭에서 **Example Scene** 찾기
+3. **Import** 버튼 클릭
+
+샘플 임포트 경로:
+```
+Assets/Samples/RoadBuilderPackage4Unity/1.0.0/Example Scene/
 ```
 
 ## 설치 방법
