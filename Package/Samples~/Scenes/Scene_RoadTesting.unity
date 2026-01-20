@@ -119,6 +119,38 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &217967670 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+  m_PrefabInstance: {fileID: 1341864935}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &217967671 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+  m_PrefabInstance: {fileID: 1341864935}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &217967674
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217967670}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6792426182135718314, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +365,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.45117077, y: -0, z: -0, w: 0.89243764}
-  m_LocalPosition: {x: 0, y: 32, z: -32}
+  m_LocalPosition: {x: -66, y: 110, z: -240}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -383,6 +415,70 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1001 &1341864935
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1361351593}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.000000037748947
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_Name
+      value: Sample_Map
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 217967674}
+  m_SourcePrefab: {fileID: 100100000, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
 --- !u!1 &1361351589
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +493,7 @@ GameObject:
   - component: {fileID: 1361351590}
   - component: {fileID: 1361351595}
   - component: {fileID: 1361351594}
-  m_Layer: 6
+  m_Layer: 4
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +517,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -433,7 +529,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1361351589}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -492,9 +588,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 217967671}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1361351594
@@ -541,7 +638,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 10, y: 0.1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
@@ -575,6 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5d46882d22824b48b042a3d9b1c5470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hanok.RoadBuilder
+  playerInput: {fileID: 0}
   groundMask:
     serializedVersion: 2
     m_Bits: 80
@@ -583,9 +681,9 @@ MonoBehaviour:
   roadMaterial: {fileID: 2100000, guid: 0802cf2872c4bf44cbf6bdca9c48e22e, type: 2}
   uvTilingPerMeter: 1
   samplesPerMeter: 1.5
-  handleLenRatio: 0.25
-  maxHandleLen: 8
   altCurveStrength: 0.1
+  curveStrengthStep: 0.1
+  maxCurveStrength: 2
   segmentLength: 6
   snapDistance: 1
   up: {x: 0, y: 0, z: 0}
@@ -593,6 +691,8 @@ MonoBehaviour:
   showGuideLine: 1
   guideLineColor: {r: 0, g: 1, b: 1, a: 1}
   guideLineWidth: 0.1
+  enableDirectionSnap: 1
+  directionSnapAngle: 10
   _buildModeEnabled: 1
 --- !u!4 &1871433685
 Transform:
