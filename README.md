@@ -45,7 +45,7 @@ RoadBuilderPackage4Unity/
 2. **+** 버튼 클릭 → **Add package from git URL** 선택
 3. 다음 URL 입력:
    ```
-   https://github.com/[YOUR_USERNAME]/RoadBuilderPackage4Unity.git?path=/Package
+   https://github.com/nedcrow/RoadBuilderPackage4Unity.git?path=/Package
    ```
 
 ### 샘플 임포트
