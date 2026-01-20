@@ -585,11 +585,14 @@ MonoBehaviour:
   samplesPerMeter: 1.5
   handleLenRatio: 0.25
   maxHandleLen: 8
-  altCurveStrength: 0.3
+  altCurveStrength: 0.1
   segmentLength: 6
-  snapDistance: 0.5
+  snapDistance: 1
   up: {x: 0, y: 0, z: 0}
   previewColor: {r: 1, g: 0.85, b: 0.2, a: 0.9}
+  showGuideLine: 1
+  guideLineColor: {r: 0, g: 1, b: 1, a: 1}
+  guideLineWidth: 0.1
   _buildModeEnabled: 1
 --- !u!4 &1871433685
 Transform:
@@ -712,9 +715,37 @@ MonoBehaviour:
     m_ActionId: 54cb90fd-0221-4fac-869e-2018eb1a487b
     m_ActionName: 'RoadActions/ReleasedCurveModifier[/Keyboard/alt]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1871433684}
+        m_TargetAssemblyTypeName: RoadBuilder, Assembly-CSharp
+        m_MethodName: OnStraightModifier
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 35f47dfd-2bfe-40fd-975c-e71759745f6a
     m_ActionName: 'RoadActions/StraightModifier[/Keyboard/shift]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1871433684}
+        m_TargetAssemblyTypeName: RoadBuilder, Assembly-CSharp
+        m_MethodName: OnScrollWheel
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a8f3d2e1-9b7c-4f6a-8e5d-3c1a2b4d5e6f
+    m_ActionName: 'RoadActions/ScrollWheel[/Mouse/scroll]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: PC
   m_DefaultActionMap: RoadActions

@@ -145,6 +145,15 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ScrollWheel"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a8f3d2e1-9b7c-4f6a-8e5d-3c1a2b4d5e6f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -213,6 +222,17 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
                     ""action"": ""StraightModifier"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f1e2d3c4-b5a6-4978-8e9f-0a1b2c3d4e5f"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""ScrollWheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -244,6 +264,7 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
         m_RoadActions_PressedCurveModifier = m_RoadActions.FindAction("PressedCurveModifier", throwIfNotFound: true);
         m_RoadActions_ReleasedCurveModifier = m_RoadActions.FindAction("ReleasedCurveModifier", throwIfNotFound: true);
         m_RoadActions_StraightModifier = m_RoadActions.FindAction("StraightModifier", throwIfNotFound: true);
+        m_RoadActions_ScrollWheel = m_RoadActions.FindAction("ScrollWheel", throwIfNotFound: true);
     }
 
     ~@RoadActionsClass()
@@ -330,6 +351,7 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
     private readonly InputAction m_RoadActions_PressedCurveModifier;
     private readonly InputAction m_RoadActions_ReleasedCurveModifier;
     private readonly InputAction m_RoadActions_StraightModifier;
+    private readonly InputAction m_RoadActions_ScrollWheel;
     /// <summary>
     /// Provides access to input actions defined in input action map "RoadActions".
     /// </summary>
@@ -365,6 +387,10 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "RoadActions/StraightModifier".
         /// </summary>
         public InputAction @StraightModifier => m_Wrapper.m_RoadActions_StraightModifier;
+        /// <summary>
+        /// Provides access to the underlying input action "RoadActions/ScrollWheel".
+        /// </summary>
+        public InputAction @ScrollWheel => m_Wrapper.m_RoadActions_ScrollWheel;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -409,6 +435,9 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
             @StraightModifier.started += instance.OnStraightModifier;
             @StraightModifier.performed += instance.OnStraightModifier;
             @StraightModifier.canceled += instance.OnStraightModifier;
+            @ScrollWheel.started += instance.OnScrollWheel;
+            @ScrollWheel.performed += instance.OnScrollWheel;
+            @ScrollWheel.canceled += instance.OnScrollWheel;
         }
 
         /// <summary>
@@ -438,6 +467,9 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
             @StraightModifier.started -= instance.OnStraightModifier;
             @StraightModifier.performed -= instance.OnStraightModifier;
             @StraightModifier.canceled -= instance.OnStraightModifier;
+            @ScrollWheel.started -= instance.OnScrollWheel;
+            @ScrollWheel.performed -= instance.OnScrollWheel;
+            @ScrollWheel.canceled -= instance.OnScrollWheel;
         }
 
         /// <summary>
@@ -533,5 +565,12 @@ public partial class @RoadActionsClass: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnStraightModifier(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ScrollWheel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnScrollWheel(InputAction.CallbackContext context);
     }
 }

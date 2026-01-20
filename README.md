@@ -71,17 +71,15 @@ Assets/Samples/RoadBuilderPackage4Unity/1.0.0/Example Scene/
    - GameObject를 선택 → Add Component → RoadBuilder
 
 3. **Ground 설정 (필수)**
-   - 바닥이 될 Plane 또는 Terrain 생성
-   - Layer를 "Ground"로 설정 (새로운 Layer 생성)
+   - 바닥이 될 Plane 또는 Terrain 생성하고 원하는 Layer를 할당
 
 ### 2. RoadBuilder Inspector 설정
 
 #### 필수 설정
 
 **Raycast / Input**
-- **Ground Mask**: 생성한 Ground Layer를 선택하세요!
-  - Ground 설정한 Layer를 반드시 지정해야 합니다
-  - 이 설정이 없으면 도로를 만들 수 없습니다
+- **Ground Mask**: 바닥과 같은 Layer를 선택해야 합니다.
+  - 이 설정이 없거나 다르면 도로를 만들 수 없습니다.
 - **Ray Max Distance**: 2000 (기본값)
 
 #### 선택 설정
@@ -142,6 +140,14 @@ Assets/Samples/RoadBuilderPackage4Unity/1.0.0/Example Scene/
 - 별도의 설정이 필요하지 않습니다.
 
 ## 사용 방법
+
+> **⚠️ 필수 사항 (New Input System 사용 시)**
+>
+> New Input System을 사용하려면 다음 설정이 반드시 필요합니다:
+> 1. `RoadActions.inputactions` 파일을 PlayerInput 컴포넌트의 **Actions**에 바인딩
+> 2. PlayerInput 컴포넌트의 **Events** 섹션에서 각 액션(LeftClick, RightClick, Cancel 등)을 RoadBuilder의 해당 메서드에 연결
+>
+> 자세한 설정 방법은 위의 [Input System 설정](#3-input-system-설정) 섹션을 참고하세요.
 
 ### 기본 조작법
 
