@@ -16,7 +16,7 @@
 
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
-*.blend1.meta
+/Dev/**/*.blend1.meta
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -66,10 +66,10 @@
 *.opendb
 *.VC.db
 
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
+# Unity3D generated meta files (Dev folder only)
+/Dev/**/*.pidb.meta
+/Dev/**/*.pdb.meta
+/Dev/**/*.mdb.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
@@ -81,7 +81,7 @@ mono_crash.*
 *.apk
 *.aab
 *.unitypackage
-*.unitypackage.meta
+/Dev/**/*.unitypackage.meta
 *.app
 
 # Crashlytics generated file
