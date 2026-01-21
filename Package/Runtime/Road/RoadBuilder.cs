@@ -24,6 +24,14 @@ public class RoadBuilder : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float rayMaxDistance = 2000f;
 
+    [Tooltip("If enabled, road centerline points will be adjusted to follow terrain height")]
+    [SerializeField] private bool followTerrain = true;
+    [Tooltip("Height offset above terrain when followTerrain is enabled")]
+    [SerializeField] private float terrainHeightOffset = 0.05f;
+
+    [Tooltip("If enabled, road side vertices will also be adjusted to follow terrain height on slopes")]
+    [SerializeField] private bool adjustSideVertices = true;
+
     [Header("Appearance")]
     [SerializeField] private float roadWidth = 2f;
     [SerializeField] private Material roadMaterial;
@@ -504,6 +512,13 @@ public class RoadBuilder : MonoBehaviour
         pos = default;
         return false;
     }
+
+
+    /// <summary>
+    /// Adjusts each point in the centerline to follow the terrain height.
+    /// Raycasts downward from above each point to find the terrain surface.
+    /// </summary>
+    
     #endregion
 
     #region Bezier Curve Generation
@@ -514,15 +529,19 @@ public class RoadBuilder : MonoBehaviour
         bool endSnapped = TryFindSnap(mouseEnd, out var ePoint, out var eTan, out var eIsEnd);
         var end = endSnapped ? ePoint : mouseEnd;
 
+        List<Vector3> centerline;
+        
         if (straightMode || !altCurveMode)
-            return BuildStraight(start, end);
+            centerline = BuildStraight(start, end);
+        else if (altCurveMode && _bezierReferencePoint != Vector3.zero)
+            centerline = BuildCircularArc(start, end, _bezierReferencePoint);
+        else
+            centerline = BuildStraight(start, end);
 
-        if (altCurveMode && _bezierReferencePoint != Vector3.zero)
-        {
-            return BuildCircularArc(start, end, _bezierReferencePoint);
-        }
-
-        return BuildStraight(start, end);
+        // Adjust centerline points to follow terrain height
+        AdjustCenterlineToTerrain(centerline);
+        
+        return centerline;
     }
 
     private List<Vector3> BuildStraight(Vector3 a, Vector3 b)
@@ -775,6 +794,30 @@ public class RoadBuilder : MonoBehaviour
     #endregion
 
     #region Road Generation & Management
+    /// <summary>
+    /// Adjusts each point in the centerline to follow the terrain height.
+    /// Raycasts downward from above each point to find the terrain surface.
+    /// Can be called externally to readjust roads when terrain changes.
+    /// </summary>
+    /// <param name="centerline">The list of centerline points to adjust</param>
+    public void AdjustCenterlineToTerrain(List<Vector3> centerline)
+    {
+        if (!followTerrain || centerline == null || centerline.Count == 0)
+            return;
+
+        for (int i = 0; i < centerline.Count; i++)
+        {
+            Vector3 point = centerline[i];
+            // Start raycast from high above the point
+            Vector3 rayOrigin = new Vector3(point.x, point.y + rayMaxDistance * 0.5f, point.z);
+            
+            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, rayMaxDistance, groundMask, QueryTriggerInteraction.Ignore))
+            {
+                centerline[i] = hit.point + up * terrainHeightOffset;
+            }
+        }
+    }
+
     private RoadComponent CreateNewRoad(List<Vector3> centerline, bool startConnected, bool endConnected)
     {
         var roadGO = GetRoadFromPool();
@@ -1064,7 +1107,21 @@ public class RoadBuilder : MonoBehaviour
     #endregion
 
     #region Mesh Generation
-    private static Mesh MeshFromCenterline(List<Vector3> cl, float width, float uvPerM, Vector3 up)
+/// <summary>
+    /// Adjusts a single point's height to match the terrain surface.
+    /// </summary>
+    private Vector3 AdjustPointToTerrain(Vector3 point)
+    {
+        Vector3 rayOrigin = new Vector3(point.x, point.y + rayMaxDistance * 0.5f, point.z);
+        
+        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, rayMaxDistance, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            return hit.point + up * terrainHeightOffset;
+        }
+        return point;
+    }
+
+    private Mesh MeshFromCenterline(List<Vector3> cl, float width, float uvPerM, Vector3 upDir)
     {
         int n = cl.Count;
         var verts = new Vector3[n * 2];
@@ -1081,10 +1138,17 @@ public class RoadBuilder : MonoBehaviour
             else if (i == n - 1) fwd = (cl[n - 1] - cl[n - 2]).normalized;
             else fwd = (cl[i + 1] - cl[i - 1]).normalized;
 
-            Vector3 left = Vector3.Cross(up, fwd).normalized;
+            Vector3 left = Vector3.Cross(upDir, fwd).normalized;
 
             var pL = cl[i] - left * half;
             var pR = cl[i] + left * half;
+
+            // Adjust side vertices to terrain if enabled
+            if (followTerrain && adjustSideVertices)
+            {
+                pL = AdjustPointToTerrain(pL);
+                pR = AdjustPointToTerrain(pR);
+            }
 
             verts[i * 2 + 0] = pL;
             verts[i * 2 + 1] = pR;
