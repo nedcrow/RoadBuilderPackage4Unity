@@ -10,6 +10,8 @@ Unity에서 도로를 만들 수 있는 클릭 기반 시스템입니다.
 - 직선/곡선 모드 전환
 - 도로 청크 삭제 기능
 - New Input System 및 Legacy Input 지원
+- 지형 추적 (Terrain Following) - 도로가 지형 높낮이를 따라감
+- Shader Graph 기반 커스텀 도로 셰이더
 
 ## Installation
 

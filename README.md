@@ -11,6 +11,8 @@ Unity에서 도로를 만들 수 있는 클릭 기반 시스템입니다.
 - **커브 조정**: Shift 키로 커브 강도를 조정
 - **청크 삭제**: 우클릭으로 특정 도로 청크 삭제
 - **미리보기**: 투명한 노란색/주황색으로 실시간 미리보기
+- **지형 추적**: 도로가 지형의 높낮이를 자동으로 따라가도록 생성
+- **커스텀 셰이더**: Shader Graph 기반 도로 셰이더 지원
 
 ## 저장소 구조
 
@@ -83,6 +85,11 @@ Assets/Samples/RoadBuilderPackage4Unity/1.0.0/Example Scene/
 - **Ray Max Distance**: 2000 (기본값)
 
 #### 선택 설정
+
+**Terrain Following**
+- **Follow Terrain**: 지형 추적 활성화 여부
+- **Terrain Height Offset**: 지형 위로 도로를 띄울 높이 (기본값 0.06)
+- **Adjust Side Vertices**: 도로 양쪽 버텍스도 지형에 맞춰 조정
 
 **Appearance**
 - **Road Width**: 도로 너비 (기본값 2.0)
