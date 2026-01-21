@@ -463,6 +463,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a1caf9045e36d1743aad6f205ad50cc8, type: 2}
     - target: {fileID: 919132149155446097, guid: c25badbf2c0d32f4aaa958e6f7c96362, type: 3}
       propertyPath: m_Name
       value: Sample_Map
@@ -677,8 +685,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 80
   rayMaxDistance: 2000
-  roadWidth: 2
-  roadMaterial: {fileID: 2100000, guid: 0802cf2872c4bf44cbf6bdca9c48e22e, type: 2}
+  followTerrain: 1
+  terrainHeightOffset: 0.06
+  adjustSideVertices: 1
+  roadWidth: 4
+  roadMaterial: {fileID: 2100000, guid: 771a4cabc1f89514b9d888d0c9045623, type: 2}
   uvTilingPerMeter: 1
   samplesPerMeter: 1.5
   altCurveStrength: 0.1
